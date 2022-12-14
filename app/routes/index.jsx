@@ -1,17 +1,13 @@
-import { Link } from "@remix-run/react";
-
-const db = [1, 3, 4, 5, 6, 7, 5, 9, 10];
+import { Link } from '@remix-run/react';
 
 export default function Index() {
   return (
-    <>
-      {
-        db.map((e) => (
-          <h1 key={e}>{e} Hello Juiz de Fora</h1>
-        ))
-      }
-      <Link to="/demo">Ir para Demo page!</Link>
-    </>
-
+    <main id="content">
+      <h1>A better way of keeping track of your notes</h1>
+      <p>Try our early beta and never loose track of your notes again!</p>
+      <p id="cta">
+        <Link to="/notes">Try Now!</Link>
+      </p>
+    </main>
   );
 }
