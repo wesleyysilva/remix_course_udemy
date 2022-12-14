@@ -7,6 +7,10 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+import MainNavigation from "./components/MainNavigation";
+import styles from '~/styles/main.css';
+
+
 export const meta = () => ({
   charset: "utf-8",
   title: "New Remix App",
@@ -21,6 +25,9 @@ export default function App() {
         <Links />
       </head>
       <body>
+        <header>
+          <MainNavigation />
+        </header>
         <Outlet />
         <ScrollRestoration />
         <Scripts />
@@ -28,4 +35,10 @@ export default function App() {
       </body>
     </html>
   );
+}
+
+export function links() {
+  return [
+    { rel: 'stylesheet', href: styles }
+  ];
 }
