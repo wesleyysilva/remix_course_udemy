@@ -48,6 +48,13 @@ export async function action({ request }) {
 	return redirect('/notes');
 }
 
+export function meta() {
+	return {
+		title: 'All Notes',
+		description: 'Manage your notes with ease.'
+	};
+}
+
 export function CatchBoundary() {
 	const caughtResponse = useCatch();
 
@@ -55,6 +62,7 @@ export function CatchBoundary() {
 
 	return (
 		<main>
+			<NewNote />
 			<p className="info-message">{message}</p>
 		</main>
 	);
