@@ -1,5 +1,5 @@
-import { redirect } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { json, redirect } from '@remix-run/node';
+import { Link, useCatch, useLoaderData } from '@remix-run/react';
 import NewNote, { links as newNoteLinks } from '~/components/NewNote';
 import NoteList, { links as noteListLinks } from '~/components/NoteList';
 
@@ -18,13 +18,25 @@ export default function NotesPage() {
 
 export async function loader() {
 	const notes = await getStoredNotes();
+
+	if (!notes || notes.length === 0) {
+		throw json({ message: 'Could not find any notes.' }, {
+			status: 404,
+			statusText: 'Not Found'
+		});
+	}
 	return notes;
 }
 
 export async function action({ request }) {
 	const formData = await request.formData();
-
 	const noteData = Object.fromEntries(formData);
+
+	if (noteData.title.trim().length < 5) {
+		return {
+			message: 'Invalid title - must be at least 5 characters long'
+		};
+	}
 
 	const existingNotes = await getStoredNotes();
 	noteData.id = new Date().toISOString();
@@ -34,6 +46,28 @@ export async function action({ request }) {
 	await storeNotes(updatedNotes);
 
 	return redirect('/notes');
+}
+
+export function CatchBoundary() {
+	const caughtResponse = useCatch();
+
+	const message = caughtResponse.data?.message || 'Data not found.';
+
+	return (
+		<main>
+			<p className="info-message">{message}</p>
+		</main>
+	);
+}
+
+export function ErrorBoundary({ error }) {
+	return (
+		<main className="error">
+			<h1>An error occurred in related route!</h1>
+			<p>{error.message}</p>
+			<p>Back to <Link to="/">safety</Link>!</p>
+		</main>
+	);
 }
 
 export function links() {
